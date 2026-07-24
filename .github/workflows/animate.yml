@@ -1,0 +1,44 @@
+name: Game of Life Animator
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+    inputs:
+      fast_mode:
+        description: 'Run in fast mode (1s framerate)?'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  animate:
+    runs-on: ubuntu-latest
+    env:
+      GH_PAT: ${{ secrets.GH_PAT }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "${{ secrets.GIT_AUTHOR_NAME }}"
+          git config --global user.email "${{ secrets.GIT_AUTHOR_EMAIL }}"
+
+      - name: Run Game of Life (Normal Mode)
+        if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && !inputs.fast_mode) }}
+        run: python gol.py --mode single
+
+      - name: Run Game of Life (Fast Mode)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.fast_mode }}
+        run: python gol.py --mode fast --duration 55
