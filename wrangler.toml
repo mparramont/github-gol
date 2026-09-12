@@ -1,0 +1,12 @@
+name = "github-gol-trigger"
+main = "worker.js"
+compatibility_date = "2024-06-20"
+account_id = "9ea58b705eefe9c5a15b28de4dcf171c"
+
+[vars]
+GH_OWNER = "mparramont"
+GH_REPO = "github-gol"
+SECRET_PATH = "trigger-gol-animation-5bc3a"
+GIT_AUTHOR_NAME = "Miguel Parramón Teixidó"
+GIT_AUTHOR_EMAIL = "mparramont@gmail.com"
+
